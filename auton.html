@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>auton</title>
+    <script src="app.js"></script>
+    <link rel="styleSheet" type="text/css" href="styleSheet.css">
+</head>
+
+<body class="autonBody" style="overflow: scroll;" onload="loadTransition(4, 1);loadPage()">
+    <table id="table">
+        <tr class="top" id="row1">
+            <th class="topSideBox">
+                <input class="infoBox" type="text" name="teamBox" id="teamNumberBox" readonly />
+            </th>
+            <th colspan="1" class="header" id="color">A<span style="display: inline-block;">u</span>ton</th>
+            <th class="topSideBox">
+                <input class="infoBox" type="text" name="matchBox" id="matchNumberBox" readonly />
+            </th>
+        </tr>
+        <tr>
+            <td rowspan='1' colspan='1'>
+            <td rowspan="2" colspan="1">
+                <textarea readonly id="teamLog1" class="terminal" placeholder="Nothing to undo"></textarea>
+                <br>
+                <textarea readonly id="teamLog2" class="score" placeholder="Nothing yet"></textarea>
+                <br>
+                <button class="undo" id="undo" onclick="Undo()">Undo</button>
+            </td>
+            <td rowspan='1' colspan='1'>
+            </td>
+        </tr>
+        <tr>  
+            <td rowspan='1' colspan='1'>
+                <button id="autonBack"
+                    onclick="saveData();saveData();window.location.href = './' + 'index' + '.html';">&larr;</button>
+            </td>
+            <td rowspan='1' colspan='1'>
+                <button id="autonNext"
+                    onclick="leaveCheck();saveData();window.location.href = './teleop.html'">&rarr;</button>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
