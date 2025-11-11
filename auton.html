@@ -6,6 +6,7 @@
     <title>auton</title>
     <script src="app.js"></script>
     <link rel="styleSheet" type="text/css" href="styleSheet.css">
+    <link rel="styleSheet" type="text/css" href="auton.css">
 </head>
 
 <body class="autonBody" style="overflow: scroll;" onload="loadTransition(4, 1);loadPage()">
@@ -20,7 +21,7 @@
             </th>
         </tr>
         <tr>
-            <td rowspan='1' colspan='1'>
+            <td rowspan='1' colspan='1'></td>
             <td rowspan="2" colspan="1">
                 <textarea readonly id="teamLog1" class="terminal" placeholder="Nothing to undo"></textarea>
                 <br>
@@ -28,10 +29,9 @@
                 <br>
                 <button class="undo" id="undo" onclick="Undo()">Undo</button>
             </td>
-            <td rowspan='1' colspan='1'>
-            </td>
+            <td rowspan='1' colspan='1'></td>
         </tr>
-        <tr>  
+        <tr class="footer">  
             <td rowspan='1' colspan='1'>
                 <button id="autonBack"
                     onclick="saveData();saveData();window.location.href = './' + 'index' + '.html';">&larr;</button>

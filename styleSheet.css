@@ -1,4 +1,4 @@
-/* Global Styles */
+Global Styles
 table {
     height: 100vh;
     width: 100vw;
@@ -6,7 +6,8 @@ table {
     padding: 0;
     border-spacing: 0;
     text-align: center;
-    font-family: Monospace; 
+    font-family: Monospace;
+    border: white 2px solid;
   }
   body {
     margin: 0;
@@ -38,8 +39,8 @@ table {
     text-align: left;
     font-size: 1.5vh;
   }
-  tr {
-  
+  table, tr, th, td {
+    border: 2px solid black;
   }
   /* Size Styleing */
   .top {
