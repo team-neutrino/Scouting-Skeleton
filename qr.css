@@ -67,26 +67,6 @@ body {
     flex: 3;
 }
 
-.grid-button-tall {
-    grid-row: 1 / span 5;
-    display: flex;
-    flex-direction: column;
-    gap: 3vh;
-}
-
-.grid-button {
-    grid-row: 1 / 1;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-}
-
-.grid-terminal {
-    grid-row: 2 / span 4;
-    display: flex;
-    flex-direction: column;
-}
-
 .qr-holder {
   padding: min(6vh, 6vw);
   border-radius: min(5vh, 5vw);
@@ -97,33 +77,10 @@ body {
   border: 2px solid white; 
 }
 
-.oldQrs {
-  padding: min(3vh, 3vw);
-  border-radius: min(5vh, 5vw);
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(1vh);
-  height: 50vh;
-  width: 20vw;
-  border: 2px solid white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  padding-bottom: 0;
-  padding-top: 0;
-}
-
 img {
   padding: min(1vh, 1vw);
   background-color: white;
 }
-
-table {
-	padding: min(1vh, 1vw);
-	background-color: white;
-}
-
-
-
 
 /* Core Element Asthetic Styles */
 
@@ -137,49 +94,6 @@ button {
     width: 18vw;
     font-family: "Bubblegum Sans", serif;
     text-shadow: 0.3vh .2vw 0 black;
-}
-
-.undo {
-    padding: 0;
-    margin-top: 1vh;
-    font-size: 3vh;
-    background-color: #ff00b187;
-    backdrop-filter: blur(1vh);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 5vh;
-    width: 17.2vw;
-}
-
-.terminal {
-    margin-top: 8vh;
-    resize: none;
-    padding: 0;
-    text-align: left;
-    padding: 1vh 1vw 0;
-    border: 3px solid black;
-    border-radius: 0.5vh;
-    color: white;
-    font-size: 2.5vh;
-    line-height: 1.4;
-    background: linear-gradient(217deg, rgba(40, 70, 43, 0.5), rgba(255,0,0,0) 70.71%),
-            linear-gradient(127deg, rgba(40,25,70,.5), rgba(0,255,0,0) 70.71%),
-            linear-gradient(336deg, rgba(0, 0, 0, 0.5), rgba(0,0,255,0) 70.71%),
-            linear-gradient(400deg, rgba(164, 216, 216, 0.5), rgba(0,0,255,0) 70.71%);
-    backdrop-filter: blur(1vh);
-    font-family: "Coustard", serif;
-  font-weight: 400;
-    transition: opacity ease-out 0.25s, transform ease-out 0.25s, box-shadow 1s ease-in-out, background-color ease-in-out 1s;
-    width: 15vw;
-    height: 50vh;
-
-}
-
-.terminal:-webkit-scrollbar {
-    height: 0.5vh;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 50x;
 }
 
 input {
@@ -232,6 +146,7 @@ h1 {
 .reset-pop-up-top {
   height: 40%;
 }
+
 .reset-pop-up-bottom {
   height: 60%;
   display: flex;
@@ -245,14 +160,6 @@ h2 {
   font-size: 4vh;
   text-align: center;
   color: white;
-}
-
-.color1 {
-  background-color: #DD1024;
-}
-
-.color2 {
-  background-color: #5DF33D;
 }
 
 .material-symbols-outlined {
@@ -343,13 +250,6 @@ svg {
   flex-direction: column;
 }
 
-.bold {
-  font-weight: 400;
-}
-
-.regen {
-  background-color: #92B5AB;
-}
 
 .matchSelect {
   height: 100%;
@@ -371,106 +271,4 @@ svg {
   border: 1px solid white;
   margin-top: 1vh;
   transition: background-color 0.25s ease;
-}
-
-
-
-
-
-
-
-
-/* Button Colors Colourful BG */
-.coral-miss {
-    background-color: #4931597F;
-    backdrop-filter: blur(1vh);
-}
-
-.foul { 
-    background-color: #3156597f;
-    backdrop-filter: blur(1vh);
-}
-
-.back, .next {
-    background-color: #17262cea;
-    backdrop-filter: blur(1vh);
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-
-.C4 {
-    background-color: #4c02027F;
-    backdrop-filter: blur(1vh);
-}
-
-.C3 {
-    background-color: #7302027F;
-    backdrop-filter: blur(1vh);
-}
-
-.C2 {
-    background-color: #9903037F;
-    backdrop-filter: blur(1vh);
-}
-
-.C1 {
-    background-color: #bf04047F;
-    backdrop-filter: blur(1vh);
-}
-
-.A4 {
-    background-color: #2542107F;
-    backdrop-filter: blur(1vh);
-}
-
-.A3 {
-    background-color: #3864197F;
-    backdrop-filter: blur(1vh);
-}
-
-.A2 {
-    background-color: #4a85217F;
-    backdrop-filter: blur(1vh);
-}
-
-.A1 {
-    background-color: #599e287F;
-    backdrop-filter: blur(1vh);
-}
-
-#waveBottom {
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 150vh;
-  background-color: white;
-  transform: translateY(-1vh);
-}
-
-#waveHolder {
-  position: relative;
-  display: block;
-}
-
-#waveBottom, #waveHolder, #path {
-  animation-fill-mode: forwards;
-  animation-iteration-count: 1;
-  animation-duration: 3s;
-  animation-timing-function: cubic-bezier(.91,-0.16,.81,1.39);
-}
-
-#oldQr {
-  transition: opacity 0.5s ease;
-}
-
-.continuieButton {
-  box-shadow: 0 0 5vh hotpink;
-  background-color: hotpink;
-  font-family: 'Comic Sans MS', cursive;
-  text-shadow: none;
-  margin-top:10vh;
-  transition: transform 2s ease-out;
 }
