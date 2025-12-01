@@ -9,6 +9,7 @@ table {
     font-family: Monospace;
     border: white 2px solid;
   }
+
   body {
     margin: 0;
     background-color: #1d1e1e;
@@ -17,6 +18,7 @@ table {
     background-repeat: no-repeat;
     background-size: cover; 
   }
+
   button {
     height: 11vh;
     width: 13vw;
@@ -230,56 +232,6 @@ table {
   }
 
   
-  /* Colours */ 
-  .invisibleButton {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-  }
-  .foulColor {
-    background-color: #005d8b;
-  }
-  .disabledColor {
-    background-color: #3ab0e2;
-  }
-  .nextColor {
-    background-color: #45C4B0;
-  }
-  .climbFailColor {
-    background-color: #34A853
-  }
-  .trapColor {
-    background-color: #FBBC05;
-  }
-  .climbGoodColor {
-    background-color: #4285F4;
-  }
-  .MicrophoneColor  {
-    background-color: #EA4335;
-  }
-  .reset {
-    background-color: red;
-  }
-  .endGameColor1 {
-    background-color: #4A154B;
-    color: white;
-  }
-  .endGameColor2 {
-    background-color: #F4EDE4;
-  }
-  .endGameColor3 {
-    background-color: #36C5F0;
-  }
-  .endGameColor4 {
-    background-color: #e55683;
-  }
-  .endGameColor5 {
-    background-color: #ECB22E;
-  }
-  .endGameColor6 {
-    background-color: #2EB67D;
-  }
-
 
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -311,8 +263,6 @@ table {
     line-height: 1.51vw;
 }
 
-
-
 .score {
     width: 14vw;
     display: block;
@@ -321,3 +271,4 @@ table {
     text-align: center;
     align-items: center;
 }
+
