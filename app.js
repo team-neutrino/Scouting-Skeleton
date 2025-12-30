@@ -5,7 +5,6 @@ var teamNumber = []; //Team Number
 var actionList = [""]; //This is the list that populates the log with human friendly text.
 var compressedList = []; //This is the list that collects all the IDs for the QR Code.
 var comments = ""; //Comments Box
-var selectedOption = "";
 var blue1 = [1,2];
 var blue2 = [3,4];
 var blue3 = [5,6];
@@ -18,8 +17,6 @@ var matchnum = 1;
 var team = "";
 var match = "";
 var savescout = sessionStorage.getItem("scoutInitials");
-var Notes = "";
-var Notes2 = "";
 var score = 0;
 
 /* Function List
@@ -45,7 +42,6 @@ function addAction(action, number) { //Used for buttons that have a data validat
   actionList.push(action); //Add it to the actionList (what the scouter sees on the app)
   compressedList.push(number); //Add it to the compressedList (QR Code)//
   updateLog(); //Update what the scouter sees on the app (actionList)
-  addButtonGlowEffect(action);
   saveData();
   console.log(compressedList);
   addScore(number);
@@ -92,62 +88,34 @@ function addScore(num) {
 }
 
 function alliancePick(alliance) {
-  addButtonGlowEffect(alliance);
-  if (alliance == "Red Alliance") {
-    document.getElementById('indexTable').style['-webkit-backdrop-filter'] = 'hue-rotate(170deg)';
-    document.getElementById('indexTable').style['backdrop-filter'] = 'hue-rotate(170deg)';
-  }
-  if (alliance == "Blue Alliance") {
-    document.getElementById('indexTable').style['-webkit-backdrop-filter'] = 'hue-rotate(0deg)';
-    document.getElementById('indexTable').style['backdrop-filter'] = 'hue-rotate(0deg)';
-
-  }
-  if (alliance == "No Alliance") {
-    document.getElementById('indexTable').style['-webkit-backdrop-filter'] = 'saturate(0%)';
-    document.getElementById('indexTable').style['backdrop-filter'] = 'saturate(0%)';
-
-  }
   extraData[4] = alliance;
   console.log(extraData);
 }
 
-function GO(iPadID, matchsaver, scoutsaver, id) {
+function GO(iPadID, matchsaver, scoutsaver) {
   getBoxData();
-  var message = "You need to add ";
-  var allClear = 1;
+  var allClear = true;
   var team = document.getElementById("teamNum");
   var match = document.getElementById("matchNum");
   var scout = document.getElementById("scout");
   if (extraData[0] === "" || extraData[1] === "" || extraData[2] === "") {
     if (extraData[0] === "") {
-      message += "a team number, ";
       team.style.border = "5px solid red";
     }
     if (extraData[1] === "") {
-      message += "a match number, ";
       match.style.border = "5px solid red";
     }
     if (extraData[2] === "") {
-      message += "your initials, ";
       scout.style.border = "5px solid red";
     }
-    message = message.substring(0, message.length - 3);
-    message += "!";
-    //console.log(message);
-    //  alert(message);
-    allClear = 0;
-    sessionStorage.setItem("selectedOption", JSON.stringify(selectedOption))
-
-    console.log(sessionStorage);
-
-    extraData[4] = "red";
+    allClear = false;
   }
   localStorage.setItem("iPadId", iPadID)
   sessionStorage.setItem("scoutInitials", scoutsaver)
   sessionStorage.setItem("matchNum", matchsaver)
   actionList[0] = extraData[4];
   saveData();
-  if (allClear == 1) {
+  if (allClear) {
     window.location.href = "./" + "auton" + ".html";
   }
   //console.log(displaySavedData());
@@ -165,9 +133,6 @@ function saveData() {
   sessionStorage.setItem("actionList", JSON.stringify(actionList));
   sessionStorage.setItem("compressedList", JSON.stringify(compressedList));
   sessionStorage.setItem("extraData", JSON.stringify(extraData));
-  sessionStorage.setItem("selectedOption", JSON.stringify(selectedOption));
-  sessionStorage.setItem("Notes", JSON.stringify(Notes));
-  sessionStorage.setItem("Notes2", JSON.stringify(Notes2));
   sessionStorage.setItem("score", score.toString());
 }
 
@@ -186,13 +151,7 @@ function getData() {
   let unparsedActionList = sessionStorage.getItem("actionList");
   let unparsedExtradata = sessionStorage.getItem("extraData");
   let unparsedCompressedList = sessionStorage.getItem("compressedList");
-  let unparsedSoption = sessionStorage.getItem("selectedOption");
-  let unparsedNotes = sessionStorage.getItem("Notes");
-  let unparsedNotes2 = sessionStorage.getItem("Notes2");
   score = parseInt(sessionStorage.getItem("score"), 10);
-  selectedOption = JSON.parse(unparsedSoption);
-  Notes = JSON.parse(unparsedNotes);
-  Notes2 = JSON.parse(unparsedNotes2)
   actionList = JSON.parse(unparsedActionList);
   compressedList = JSON.parse(unparsedCompressedList);
   extraData = JSON.parse(unparsedExtradata);
@@ -475,7 +434,6 @@ function updateLastClicked(elementID) {
 }
 
 let zoom = false;
-let madeBubbles = false;
 let regenOpen = false;
 let resetMenuVisible = false;
 
@@ -551,25 +509,6 @@ function load(loadOut, windowLocation) {
       }
     }, 15 * b);
   }
-}
-
-function buttonEfffect(button) {
-  actionList.push(button.innerText);
-  let buttonBg = getComputedStyle(button).backgroundColor;
-  let terminal = document.getElementById("terminal");
-  let buttonBgRGBA = buttonBg;
-  buttonBg = buttonBg.substring(0, buttonBg.length - 8) + ")";
-  buttonBg = buttonBg.replace("a", "");
-  //alert(buttonBg);
-  button.style.boxShadow = "0 0 10vh " + buttonBg;
-  terminal.style.backgroundColor = buttonBgRGBA;
-  setTimeout(() => {
-    button.style.boxShadow = "";
-    terminal.style.backgroundColor = "";
-  }, 1000);
-  var logText = actionList.slice().reverse().join("\n");
-  document.getElementById("terminal").value = logText;
-  //alert(button.innerText);
 }
 
 function qrZoom() {
@@ -745,7 +684,6 @@ function regenQR() {
 
   }
 }
-
 
 function resetToIndex() {
 

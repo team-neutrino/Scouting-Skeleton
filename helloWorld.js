@@ -106,7 +106,6 @@ function reset(action) {
         document.getElementById("qrArea").style.removeProperty("transform");
     }, 300);
   }
-  
 }
 
 function toQuotes() {
