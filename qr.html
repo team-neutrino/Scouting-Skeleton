@@ -42,7 +42,6 @@
         correctLevel: QRCode.CorrectLevel.M,
       });
       document.getElementById('qrArea').style.width = qrSize + "px";
-      console.log(displaySavedData());
       let unparsedActionList = sessionStorage.getItem("actionList");
       let unparsedExtradata = sessionStorage.getItem("extraData");
       let unparsedCompressedList = sessionStorage.getItem("compressedList");

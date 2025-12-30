@@ -118,7 +118,6 @@ function GO(iPadID, matchsaver, scoutsaver) {
   if (allClear) {
     window.location.href = "./" + "auton" + ".html";
   }
-  //console.log(displaySavedData());
 }
 
 function getBoxData() {
@@ -126,7 +125,6 @@ function getBoxData() {
   extraData[1] = document.getElementById('matchNum').value;
   extraData[2] = document.getElementById('scout').value;
   saveData();
-  console.log(extraData);
 }
 
 function saveData() {
@@ -136,18 +134,7 @@ function saveData() {
   sessionStorage.setItem("score", score.toString());
 }
 
-function displaySavedData() {
-  let compList = sessionStorage.getItem("compressedList");
-  compList = JSON.parse(compList);
-  let actList = sessionStorage.getItem("actionList");
-  actList = JSON.parse(actList);
-  let exData = sessionStorage.getItem("extraData");
-  exData = JSON.parse(exData);
-  score = parseInt(sessionStorage.getItem("score"), 10);
-  return "compressed list: " + compList + " action list: " + actList + " extra data: " + exData;
-}
 function getData() {
-  console.log(displaySavedData());
   let unparsedActionList = sessionStorage.getItem("actionList");
   let unparsedExtradata = sessionStorage.getItem("extraData");
   let unparsedCompressedList = sessionStorage.getItem("compressedList");
@@ -169,25 +156,13 @@ function loadPage() {
   document.getElementById("teamLog2").value = score;
 }
 
-function qualLoad() {
-  getData();
-  document.getElementById('teamNumberBox').value = extraData[0];
-  document.getElementById('matchNumberBox').value = extraData[1];
-  addStarRate("clutter;" + extraData[5]);
-  addStarRate("driver;" + extraData[6]);
-  addStarRate("accuracy;" + extraData[7]);
-  addStarRate("defence;" + extraData[8]);
-}
-
 function displayBoxData() {
   if (extraData[0] !== undefined) {
     document.getElementById('teamNumberBox').value = extraData[0];
-    console.log(document.getElementById('teamNumberBox').value);
   }
   if (extraData[1] !== undefined) {
     document.getElementById('matchNumberBox').value = extraData[1];
   }
-  console.log(document.getElementById('teamNumberBox').value);
   if (extraData[3] !== undefined) {
     document.getElementById('coment').value = extraData[3];
   }
@@ -222,57 +197,36 @@ function Undo() {
 }
 function pullIPadID() {
   document.getElementById("iPadIDarea").value = localStorage.getItem("iPadId");
-  console.log(sessionStorage.getItem("matchNum"));
   savescout = sessionStorage.getItem("scoutInitials");
-
-  console.log(sessionStorage.getItem('matchNumber'));
   if (sessionStorage.getItem('matchNumber') !== null) {
     incmatchnumber = sessionStorage.getItem('matchNumber');
-    console.log("used the incremented match number");
-    console.log("new match number value: " + incmatchnumber);
   }
   document.getElementById("matchNum").value = incmatchnumber;
   document.getElementById("scout").value = savescout;
 }
 
-function setTeam(matchnumb, id) {
-
-  var teamnumb = document.getElementById("teamNum");
-
-  var ipadID = id
-  console.log(sessionStorage.getItem('matchNumber'));
+function setTeam(matchnumb, ipadID) {
   if (sessionStorage.getItem('matchNumber') !== null) {
     matchnum = sessionStorage.getItem('matchNumber');
-    console.log("used the incremented match number");
   }
   matchnum = parseInt(matchnumb);
-
-  if (blue1[0] != -12) {
-    if (ipadID == 1) {
-
-      document.getElementById("teamNum").value = blue1[matchnum - 1];
-      console.log(blue1[matchnum - 1]);
-    }
-    if (ipadID == 2) {
-      document.getElementById("teamNum").value = blue2[matchnum - 1];
-      console.log(blue2[matchnum - 1]);
-    }
-    if (ipadID == 3) {
-      document.getElementById("teamNum").value = blue3[matchnum - 1];
-      console.log(blue3[matchnum - 1]);
-    }
-    if (ipadID == 4) {
-      document.getElementById("teamNum").value = red1[matchnum - 1];
-      console.log(red1[matchnum - 1]);
-    }
-    if (ipadID == 5) {
-      document.getElementById("teamNum").value = red2[matchnum - 1];
-      console.log(red2[matchnum - 1]);
-    }
-    if (ipadID == 6) {
-      document.getElementById("teamNum").value = red3[matchnum - 1];
-      console.log(red3[matchnum - 1]);
-    }
+  if (ipadID == 1) {
+    document.getElementById("teamNum").value = blue1[matchnum - 1];
+  }
+  else if (ipadID == 2) {
+    document.getElementById("teamNum").value = blue2[matchnum - 1];
+  }
+  else if (ipadID == 3) {
+    document.getElementById("teamNum").value = blue3[matchnum - 1];
+  }
+  else if (ipadID == 4) {
+    document.getElementById("teamNum").value = red1[matchnum - 1];
+  }
+  else if (ipadID == 5) {
+    document.getElementById("teamNum").value = red2[matchnum - 1];
+  }
+  else if (ipadID == 6) {
+    document.getElementById("teamNum").value = red3[matchnum - 1];
   }
 }
 
