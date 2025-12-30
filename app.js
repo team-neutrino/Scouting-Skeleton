@@ -296,173 +296,33 @@ function qrZoom() {
 }
 
 function toQuotes() {
-  /*body.innerHTML += '<svg width="100vw" height="120vh" style="top:110vh;animation: slide-in 2.5s linear;box-shadow: 0px 0px 100px white;"> \n <rect width="100vw" height="120vh" x="0" y="0" rx="0" ry="20" fill="white" /> \n </svg>';*/
   document.getElementById("yesButton").style.transform = "scale(1.2, 1.2)";
   document.getElementById('changeStyle').innerHTML = "";
-  document.getElementById('waveHolder').style.animationName = "slide-in-no-fade";
   extraData[1] = parseInt(extraData[1])
-  console.log(extraData[1] + " adding 1 gives.. " + (extraData[1] + 1));
   sessionStorage.setItem('matchNumber', extraData[1] + 1);
-  console.log("New Match Number: " + sessionStorage.getItem('matchNumber'));
-  setTimeout(() => {
-    document.getElementById('path').style.animationDuration = "0.5s";
-    document.getElementById('waveBottom').style.animationDuration = "0.5s";
-    document.getElementById('path').style.animationName = "color-shift";
-    document.getElementById('waveBottom').style.animationName = "color-shift";
-
-  }, 2800);
   let takeout = getQuote();
   let quote = takeout[0];
   let author = takeout[1];
-  let length = takeout[2];
-  setTimeout(() => {
 
-    document.getElementById('body').innerHTML = '<div class="quoteDiv" id="insertQuote"></div>';
-    let insertQuote = document.getElementById('insertQuote');
-    let repeat = quote.length;
-    for (let i = 0; i < repeat; i++) {
-
-      setTimeout(() => {
-        insertQuote.innerHTML += quote[i];
-      }, 15 * i);
-
-    }
-    setTimeout(() => {
-      insertQuote.innerHTML += "<br><br><strong>" + author + "</strong>";
-      insertQuote.innerHTML += "<button onclick='resetToIndex()' class='continuieButton' id='contineButton'>Continue</button>";
-      var sums = Array(27).fill(0);
-      for (const item of compressedList) {
-        sums[item]++;
-      }
-      //alert(sums);
-      localStorage.setItem("oldCompList" + extraData[1], sums);
-      localStorage.setItem("oldExtraData" + extraData[1], extraData);
-    }, 20 * repeat);
-
-  }, 3400);
-
-  setTimeout(() => {
-
-
-
-    //alert(compressedList);
-
-    //window.location.href = `./index.html`;
-
-
-
-  }, 3500 + length);
-
-
-}
-
-
-
-
-function makeBubble() {
-  let offset = Math.random() * 110;
-  let size = Math.random() * (50 - 5) + 5;
-  let topOffset = ((Math.random() * (30 - 5) + 5) / 2) + 100;
-  let time = Math.random() * (2 - 0) + 0;
-  return `<svg width="100" height="100"  id="bubble" style="right:${offset + 10}vw;top:${topOffset}vh;animation: slide-in ${time + 0.8}s linear;animation-delay: ${time};"> \n <circle cx="50" cy="50" r="${size}" stroke="white" stroke r="${size}" stroke="white" stroke-width="4" fill="white" /> \n </svg>`;
-}
-
-function makeOldMatches() {
-  for (let i = 1; i < 30; i++) {
-    oldMatches.push(i);
-  }
-}
-makeOldMatches(); // delete me for regen stuff
-function regenQR() {
-  let container = document.getElementById('resetQr');
-  let regenHTML = '<h2 class="matchHeader">What Match?</h2> \n<div class="matchSelect" id="matchSelect"> \n</div>';
-  if (resetMenuVisible) {
-    regenHTML = '<h2 class="matchHeader">Ya Ha Ha! You found me!</h2>';
-  }
-  if (!regenOpen) {
-
-    const boxes = [...container.children];
-    const firstRects = boxes.map(box => box.getBoundingClientRect());
-
-
-    const newBox = document.createElement('div');
-    newBox.classList.add("oldQrs");
-    newBox.innerHTML = regenHTML;
-    newBox.setAttribute('id', 'oldQr');
-    container.appendChild(newBox);
-    if (!resetMenuVisible) {
-      addOldMatches();
-    }
-
-    const lastRects = [...container.children].map(box => box.getBoundingClientRect());
-    // Step 3: Apply FLIP animation
-    boxes.forEach((box, i) => {
-      const dx = firstRects[i].left - lastRects[i].left;
-      console.log(dx);
-      const dy = firstRects[i].top - lastRects[i].top;
-      console.log(dy);
-      box.style.transition = 'none';
-      box.style.transform = `translate(${dx}px, ${dy}px)`;
-      let newBoxx = document.getElementById('oldQr');
-      newBoxx.style.transform = `translate(${dx * 4}px, ${dy}px)`;
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          box.style.transition = 'transform 0.5s ease';
-          box.style.transform = "";
-          newBoxx.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
-          newBoxx.style.transform = "";
-        });
-      }, 1);
-
-    });
-
-
-    regenOpen = true;
-  } else {
-    regenOpen = false;
-    const boxes = [...container.children];
-    const firstRects = boxes.map(box => box.getBoundingClientRect());
-
-    document.getElementById('oldQr').style.transform = 'translate(50vw, 0)'
-    document.getElementById('oldQr').style.opacity = '0'
+  document.getElementById('body').innerHTML = '<div class="quoteDiv" id="insertQuote"></div>';
+  let insertQuote = document.getElementById('insertQuote');
+  let repeat = quote.length;
+  for (let i = 0; i < repeat; i++) {
 
     setTimeout(() => {
-      container.removeChild(document.getElementById('oldQr'));
-
-      const lastRects = [...container.children].map(box => box.getBoundingClientRect());
-
-      // Step 3: Apply FLIP animation
-      boxes.forEach((box, i) => {
-        const dx = firstRects[i].left - lastRects[i].left;
-        console.log(dx);
-        const dy = firstRects[i].top - lastRects[i].top;
-        console.log(dy);
-        box.style.transition = 'none';
-        box.style.transform = `translate(${dx}px, ${dy}px)`;
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            box.style.transition = 'transform 0.5s ease';
-            box.style.transform = "";
-          });
-        }, 1);
-      });
-    }, 200);
-
-
+      insertQuote.innerHTML += quote[i];
+    }, 15 * i);
 
   }
-}
-
-function resetToIndex() {
-
-  document.getElementById('contineButton').innerText = "";
-  document.getElementById('contineButton').style.transform = 'scale(7,30)';
-
   setTimeout(() => {
-    window.location.href = `./index.html`;
-  }, 750);
-  setTimeout(() => {
-
-  }, 850);
-
+    insertQuote.innerHTML += "<br><br><strong>" + author + "</strong>";
+    insertQuote.innerHTML += "<button onclick='window.location.href = `./index.html`' class='continuieButton' id='contineButton'>Continue</button>";
+    var sums = Array(27).fill(0);
+    for (const item of compressedList) {
+      sums[item]++;
+    }
+    //alert(sums);
+    localStorage.setItem("oldCompList" + extraData[1], sums);
+    localStorage.setItem("oldExtraData" + extraData[1], extraData);
+  }, 20 * repeat);
 }
