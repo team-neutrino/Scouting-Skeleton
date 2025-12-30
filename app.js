@@ -195,6 +195,7 @@ function Undo() {
     console.log("Nothing to undo");
   }
 }
+
 function pullIPadID() {
   document.getElementById("iPadIDarea").value = localStorage.getItem("iPadId");
   savescout = sessionStorage.getItem("scoutInitials");
@@ -230,168 +231,9 @@ function setTeam(matchnumb, ipadID) {
   }
 }
 
-function setTeampull(matchnumb) {
-  var ipadID = localStorage.getItem("iPadId")
-
-  matchnum = parseInt(matchnumb);
-
-  if (blue1[0] != -12) {
-    if (ipadID == 1) {
-      console.log("testagain")
-      document.getElementById("teamNum").value = blue1[matchnum - 1];
-      console.log(blue1[matchnum - 1]);
-    }
-    if (ipadID == 2) {
-      document.getElementById("teamNum").value = blue2[matchnum - 1];
-      console.log(blue2[matchnum - 1]);
-    }
-    if (ipadID == 3) {
-      document.getElementById("teamNum").value = blue3[matchnum - 1];
-      console.log(blue3[matchnum - 1]);
-    }
-    if (ipadID == 4) {
-      document.getElementById("teamNum").value = red1[matchnum - 1];
-      console.log(red1[matchnum - 1]);
-    }
-    if (ipadID == 5) {
-      document.getElementById("teamNum").value = red2[matchnum - 1];
-      console.log(red2[matchnum - 1]);
-    }
-    if (ipadID == 6) {
-      document.getElementById("teamNum").value = red3[matchnum - 1];
-      console.log(red3[matchnum - 1]);
-    }
-  }
-}
-
-function ChangeRatingValue(selectedRating, value) {
-  if (!isNaN(value)) {
-    document.getElementById(selectedRating).innerText = "Selected Rating: " + value;
-  } else {
-    document.getElementById(selectedRating).innerText = "Selected Rating: 0";
-  }
-}
-
-function addStarRate(id) {
-  let rateText = id.split(";")[0];
-  console.log(rateText);
-  let value = Number(id.split(";")[1]);
-  const ogValue = value;
-  console.log(value);
-  console.log("Clearing Stars...");
-  let listOfClasses = "";
-  if (value > 0) {
-    listOfClasses = Array.from(document.getElementById(id).classList);
-  }
-
-  if (listOfClasses.includes("lastClicked")) {
-    value = 0;
-  }
-
-  //Clears all the filled values regardless if they have them, screw optimizations
-  for (let i = 1; i < 6; i++) {
-    let starID = rateText + ";" + i;
-    document.getElementById(starID).classList.remove("filled");
-  }
-  console.log("Filling Stars...");
-
-  //Fills the stars that need it
-  for (let i = 1; i < value + 1; i++) {
-    let starID = rateText + ";" + i;
-    document.getElementById(starID).classList.add("filled");
-  }
-  //Basicly a fancy if statement
-  switch (rateText) {
-    case "clutter":
-      console.log("Updating Clutter Star Rating to " + value);
-      extraData[5] = value;
-      ChangeRatingValue("ratingValue1", value)
-      break;
-    case "driver":
-      console.log("Updating Driver Skill Star Rating. " + value);
-      extraData[6] = value;
-      ChangeRatingValue("ratingValue2", value)
-      break;
-    case "accuracy":
-      console.log("Updating Accuracy Star Rating " + value);
-      extraData[7] = value;
-      ChangeRatingValue("ratingValue3", value)
-      break;
-    case "defence":
-      console.log("Updating Defence Star Rating " + value);
-      extraData[8] = value;
-      ChangeRatingValue("ratingValue4", value)
-      break;
-  }
-
-  console.log(extraData);
-
-  if (ogValue > 0) {
-    updateLastClicked(id);
-  } else {
-    resetAllClicked(rateText + ";" + 1);
-  }
-
-  saveData();
-}
-
-function resetQual() {
-  const goOn = confirm("Are you sure you want to reset the stars?");
-  if (goOn) {
-    addStarRate("defence;0");
-    addStarRate("clutter;0");
-    addStarRate("driver;0");
-    addStarRate("accuracy;0");
-  }
-}
-
-function resetAllClicked(elementID) {
-  const element = document.getElementById(elementID);
-  const parentElement = element.parentNode;
-  const parentId = parentElement.id;
-
-  const nodesList = parentElement.getElementsByClassName("lastClicked");
-
-  const nodes = Array.from(nodesList);
-
-  for (let i in nodes) {
-    nodes[i].classList.remove("lastClicked");
-  }
-  const check = parentElement.getElementsByClassName("lastClicked");
-}
-
-function updateLastClicked(elementID) {
-
-  const listOfClasses = Array.from(document.getElementById(elementID).classList);
-
-
-  const element = document.getElementById(elementID);
-  const parentElement = element.parentNode;
-  const parentId = parentElement.id;
-
-  const nodesList = parentElement.getElementsByClassName("lastClicked");
-
-  const nodes = Array.from(nodesList);
-
-  for (let i in nodes) {
-    nodes[i].classList.remove("lastClicked");
-  }
-
-  const check = parentElement.getElementsByClassName("lastClicked");
-
-  if (listOfClasses.includes("lastClicked")) {
-    document.getElementById(elementID).classList.remove("lastClicked");
-  } else {
-    document.getElementById(elementID).classList.add("lastClicked");
-  }
-
-}
-
 let zoom = false;
 let regenOpen = false;
 let resetMenuVisible = false;
-
-
 
 function reset(action) {
   let resetQr = document.getElementById('resetQr');
@@ -430,39 +272,11 @@ function reset(action) {
       document.getElementById("qrArea").style.removeProperty("transform");
     }, 300);
   }
-
 }
 
-
-
-function load(loadOut, windowLocation) {
-  const targetElements = Array.from(document.querySelectorAll('div.flex-container *')).filter(element => {
-    const children = element.children;
-    return (
-      element.tagName !== 'SVG' && // Exclude <svg> elements
-      !(element.tagName === 'DIV' && children.length > 0 && children[0].tagName === 'SVG') && // Exclude <div> where the first child is <svg>
-      (children.length === 0 || // Childless element
-        (children.length === 1 && children[0].tagName === 'SPAN')) // Only one child, and it's a <span>
-    );
-  });
-
-
-
-  if (loadOut) {
-    targetElements.reverse();
-  }
-  for (let b in targetElements) {
-    setTimeout(() => {
-      if (loadOut) {
-        targetElements[b].style.opacity = "0";
-        targetElements[b].style.transform = "scale(0.5, 0.5)";
-        window.location.href = `./${windowLocation}.html`;
-      } else {
-        targetElements[b].style.opacity = "1";
-        targetElements[b].style.transform = "scale(1, 1)";
-      }
-    }, 15 * b);
-  }
+function load(windowLocation) {
+  saveData()
+  window.location.href = `./${windowLocation}.html`;
 }
 
 function qrZoom() {
