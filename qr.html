@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="UTF-8">
-    <title>Teleop</title>
+    <title>Qr</title>
     <link rel="stylesheet" href="qr.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
       rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Coustard:wght@400;900&family=Playpen+Sans:wght@100..800&family=Seaweed+Script&display=swap" rel="stylesheet">
-    
-    
     <script src="./app.js" defer></script>
     <script src="./qrCode.js" defer></script>
     <script src="./quote.js" defer></script>
     <script> 
     let lastSelect = "m2";
-      function initQRCode() {
-      console.log('here ', localStorage);
-      console.log("fourth");
+    function initQRCode() {
       let height = document.body.clientHeight;
       let width = document.body.clientWidth;
       let qrSize = 200;
@@ -30,15 +26,10 @@
       }
       qrcode = new QRCode(document.getElementById("qrArea"), {
         text: "",
-
         width: qrSize,
-
         height: qrSize,
-
         colorDark: "black",
-
         colorLight: "white",
-
         correctLevel: QRCode.CorrectLevel.M,
       });
       document.getElementById('qrArea').style.width = qrSize + "px";
@@ -48,19 +39,15 @@
       actionList = JSON.parse(unparsedActionList);
       compressedList = JSON.parse(unparsedCompressedList);
       extraData = JSON.parse(unparsedExtradata);
-      console.log(actionList);
-      console.log(compressedList);
-      console.log(extraData);
       var sums = Array(27).fill(0);
       for (const item of compressedList) {
         sums[item]++;
       }
-	      document.getElementById('teamNumberBox').value = extraData[0];
 
-	document.getElementById('matchNumberBox').value = extraData[1];
-	      
+      document.getElementById('teamNumberBox').value = extraData[0];
+      document.getElementById('matchNumberBox').value = extraData[1];
+
       qrcode.clear();
-       qrcode.makeCode("test me");
       qrcode.makeCode(
         extraData[0] +
           "\t" +
@@ -68,7 +55,6 @@
           "\t" +
           extraData[2] +
           "\t" +
-          //encodeURI(extraData[3]) +
           extraData[3] +
           "\t" +
           extraData[4] +
@@ -84,54 +70,30 @@
           sums.join(",")
       );
     }
-   
-   
     
     document.addEventListener("DOMContentLoaded", function () {
-    let body = document.getElementById('body');
-    let fragment = document.createDocumentFragment(); // Batch append for performance
+      let body = document.getElementById('body');
+      let fragment = document.createDocumentFragment(); // Batch append for performance
+    });
 
-    for (let i = 0; i < 800; i++) {
-        let wrapper = document.createElement("div");
-        wrapper.innerHTML = makeBubble().trim();
-        let svgElement = wrapper.firstElementChild;
-
-        if (svgElement) {
-            fragment.appendChild(svgElement);
-        }
-    }
-
-    body.appendChild(fragment); // Append all bubbles at once
-});
-
-//Placeholder function for the regen feature, you can change
-
-function regenOldQR2() {
-  const oldMatch = prompt("What Match? (Please Tell me) (I need to know) (Im sad and lonely)");
-  const oldCompList = localStorage.getItem("oldCompList" + oldMatch)
-  //alert('here');
-  //alert(oldCompList);
-  if(oldCompList === null) {
-    alert(">uwu<");
-    return;
-  }
-  let oldExtraData = localStorage.getItem("oldExtraData" + oldMatch).split(",");
-  if(oldCompList === null) {
-    
-  }
-  //alert(9);
-  qrcode.clear();
+    function regenOldQR() {
+      const oldMatch = prompt("What Match?");
+      const oldCompList = localStorage.getItem("oldCompList" + oldMatch)
+      if(oldCompList === null) {
+        return;
+      }
+      let oldExtraData = localStorage.getItem("oldExtraData" + oldMatch).split(",");
+      qrcode.clear();
       qrcode.makeCode(
-         oldExtraData[0] +
-           "\t" +
-           oldExtraData[1] +
-           "\t" +
-           oldExtraData[2] +
-           "\t" +
-           //encodeURI(extraData[3]) +
-           oldExtraData[3] +
-           "\t" +
-           oldExtraData[4] +
+        oldExtraData[0] +
+          "\t" +
+          oldExtraData[1] +
+          "\t" +
+          oldExtraData[2] +
+          "\t" +
+          oldExtraData[3] +
+          "\t" +
+          oldExtraData[4] +
           "\t" +
           oldExtraData[5] +
           "\t" +
@@ -143,50 +105,13 @@ function regenOldQR2() {
           "\t" +
           oldCompList
       );
-}
-
-
-
-
-
-
-
-
-function makeOldQr(id) {
-  let newList = [];
-  while(newList.length < 25) {
-    newList.push(getRandomInt(0, 8));
-  }
-  
-  var sums = Array(10).fill(0);
-  for (const item of newList) {
-    sums[item]++;
-  }
-
-  qrcode.clear();
-  qrcode.makeCode(sums.join(","));
-  
-  //keep this part
-  document.getElementById(lastSelect).style.removeProperty("background-color");
-  document.getElementById(id).style.backgroundColor = "rgba(82, 100, 110, 0.6)";
-  lastSelect = id;
-}
-
+    }
     </script>
-    
-    <style id="changeStyle">
-      #bubble {
-  animation-play-state: paused !important;
-}
+    <style id="changeStyle"></style>
+  </head>
 
-    </style>
-    <style>
-    
-</style>
-</head>
-
-<body onload="initQRCode()" id="body">
-  <div class="flex-container">
+  <body onload="initQRCode()" id="body">
+    <div class="flex-container">
       <div class="flex-header" id="flexHeader">
           <div class="flex-small">
               <input type="text" id="teamNumberBox" placeholder="Team" readonly>
@@ -198,14 +123,10 @@ function makeOldQr(id) {
               <input type="text" id="matchNumberBox" placeholder="Match"readonly>
           </div>
       </div>
-      
-      
-      
       <div class="flex-center-no-grid" id="resetQr">
         <div class="qr-holder" id="qrArea"  onclick="qrZoom()"  style="opacity: 1; transform: scale(1, 1)">
         </div>
       </div>
-      
       <div class="flex-bottom">
         <div class="flex-small">
             <button class="back" onclick="load('endgame');document.getElementById('qrArea').style.transform = 'scale(0.8, 0.8)';;document.getElementById('qrArea').style.opacity = '0'">
@@ -214,7 +135,7 @@ function makeOldQr(id) {
             </button>
         </div>
         <div class="flex-wide">
-            <button class="regen" onclick="regenOldQR2()">
+            <button class="regen" onclick="regenOldQR()">
                       <span class="material-symbols-outlined">history</span>
                       Regen Qr
                   </button>
@@ -225,19 +146,6 @@ function makeOldQr(id) {
                 <span class="material-symbols-outlined">celebration</span>
             </button>
         </div>
-    </div>
-    
-    
-    
-  </div>
-  <div id="waveHolder">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" id="wave">
-        <path id="path" fill="white" fill-opacity="1" d="M0,128L48,128C96,128,192,128,288,138.7C384,149,480,171,576,170.7C672,171,768,149,864,149.3C960,149,1056,171,1152,165.3C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-      </svg>
-    <div id="waveBottom"></div>
-    </div>
-    
-    
-</body>
+      </div>
+  </body>
 </html>
-
