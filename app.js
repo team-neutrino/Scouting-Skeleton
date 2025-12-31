@@ -321,7 +321,6 @@ function toQuotes() {
     for (const item of compressedList) {
       sums[item]++;
     }
-    //alert(sums);
     localStorage.setItem("oldCompList" + extraData[1], sums);
     localStorage.setItem("oldExtraData" + extraData[1], extraData);
   }, 20 * repeat);
