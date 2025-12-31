@@ -1,0 +1,128 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Boogaloo&family=Playwrite+IT+Moderna:wght@100..400&family=Playwrite+VN:wght@100..400&family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,27..175,323,25..135,786,788,456,760&display=swap');
+
+
+
+/* Layout Styles */
+div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+/*    overflow: hidden;*/
+    background-image: url(bg5.png);
+    background-size: cover;
+    background-color: #2D3A3F;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+}
+
+.flex-header {
+    display: inherit;
+    flex-direction: row;
+    height: 15vh;
+    width: inherit;
+}
+
+.flex-center {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: repeat(5, 1fr);
+    grid-auto-flow: column;
+    height: 72vh;
+    width: inherit;
+
+}
+.flex-center-no-grid {
+    display: flex;
+    height: 72vh;
+    width: inherit;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.flex-bottom { 
+    display: inherit;
+    flex-direction: row;
+    height: 13vh;
+    width: inherit;
+}
+
+.flex-small {
+    flex: 1;
+}
+.flex-wide {
+    flex: 3;
+}
+
+.qr-holder {
+  padding: min(6vh, 6vw);
+  border-radius: min(5vh, 5vw);
+  display: flex;
+  background-color: white;
+  backdrop-filter: blur(1vh);
+  transition: transform 0.25s cubic-bezier(0, .5, .5, 1), opacity 0.5s cubic-bezier(0, .5, .5, 1);
+  border: 2px solid white; 
+}
+
+img {
+  padding: min(1vh, 1vw);
+  background-color: white;
+}
+
+/* Core Element Asthetic Styles */
+
+.reset-pop-up {
+  height: min(50vh, 50vw);
+  width: min(50vh, 50vw);
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(1vh);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  border-radius: min(5vh, 5vw);
+  border: 2px solid white;
+  transition: transform 0.4s ease-out, opacity 0.25s ease-out;
+}
+
+.reset-pop-up-bottom {
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+h2 {
+  font-family: "Playpen Sans", serif;
+  font-weight: 750;
+  font-size: 4vh;
+  text-align: center;
+  color: white;
+}
+
+.quoteDiv {
+  height: 100vh;
+  width: 100vw;
+  background: black;
+  color: white;
+  text-shadow: 0 0 1vh white;
+  font-size: 3vh;
+  text-align: center;
+  line-height: 5vh;
+  font-family: 'Comic Sans MS', cursive;
+  font-weight: 200;
+  display: flex;
+  flex-direction: column;
+}
