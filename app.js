@@ -1,5 +1,6 @@
-let extraData = []; //['teamNum', 'matchNum', 'scout', 'comment', 'red']
-//Cluttering of Field (C 1-5), Driver Skill (D 1-5), Accuracy (AR 1-5), Align Time (AT 1-5)]
+const pointList = [1,4,3]
+
+let extraData = []; //['teamNum', 'matchNum', 'scout', 'comment', 'alliance pick']
 var matchNumber = []; //Match Number
 var teamNumber = []; //Team Number
 var actionList = [""]; //This is the list that populates the log with human friendly text.
@@ -19,23 +20,15 @@ var match = "";
 var savescout = sessionStorage.getItem("scoutInitials");
 var score = 0;
 
+
 /* Function List
 --- Direct Button Functions ---
-changeMatchNumber: Used to change the match number
-changeTeamNumber: Used to change the team number
 addAction: Called everytime a button is pushed.
 Undo: Pops items off of all the lists.
-moveTableLeft: Used to move backwards in the table structure
-moveTableRight: Used to move forward in the table structure
-updateComments: Add comments
-resetButton: Resets all the variables
 --- Indirect Functions ---
 init: Initialize everything
 updateLog: Updates the human list of actions done.
 updateAvail: This was created to enable/disable (validation) scoring buttons based on how many game pieces the robot has.
---- Notes ---
-The updateReview and updateList using the organizedActionList variable in 2022 code was legacy code that was used to show the scouter the total # they put in. This might be useful to have on a review page.
-Combined lowerCounter and raiseCounter functions into the updateAvail function to make it easier.
 */
 
 function addAction(action, number) { //Used for buttons that have a data validation script
@@ -44,46 +37,15 @@ function addAction(action, number) { //Used for buttons that have a data validat
   updateLog(); //Update what the scouter sees on the app (actionList)
   saveData();
   console.log(compressedList);
-  addScore(number);
+  updateScore();
 }
 
-function addScore(num) {
-  var tempScore = 0;
-  switch (num) {
-    case 11:
-    case 23:
-      tempScore = 2;
-      break;
-    case 1:
-    case 2:
-    case 12:
-      tempScore = 3;
-      break;
-    case 3:
-    case 8:
-    case 13:
-    case 17:
-      tempScore = 4;
-      break;
-    case 14:
-      tempScore = 5;
-      break;
-    case 4:
-    case 7:
-    case 16:
-    case 21:
-      tempScore = 6;
-      break;
-    case 5:
-      tempScore = 7;
-      break;
-    case 19:
-      tempScore = 12;
-      break;
-    default:
-      tempScore = 0;
+function updateScore() {
+  var currentScore = 0
+  for(i = 0; i < compressedList.length; i++){
+    currentScore += pointList[compressedList[i]]
   }
-  score = score + tempScore;
+  score = currentScore;
   document.getElementById("teamLog2").value = score;
 }
 
@@ -148,6 +110,9 @@ function getData() {
   if (document.getElementById('teamLog1') !== null) {
     updateLog();
   }
+  if (document.getElementById('teamLog2') !== null) {
+    updateScore();
+  }
 }
 
 function loadPage() {
@@ -191,6 +156,7 @@ function Undo() {
     }, 1100);
     compressedList.pop();
     updateLog();
+    updateScore();
   } else {
     console.log("Nothing to undo");
   }
