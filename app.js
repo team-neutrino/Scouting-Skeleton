@@ -283,7 +283,7 @@ function toQuotes() {
   setTimeout(() => {
     insertQuote.innerHTML += "<br><br><strong>" + author + "</strong>";
     insertQuote.innerHTML += "<button onclick='window.location.href = `./index.html`' class='continuieButton' id='contineButton'>Continue</button>";
-    var sums = Array(27).fill(0);
+    var sums = Array(27).fill(0); //Compress List
     for (const item of compressedList) {
       sums[item]++;
     }
