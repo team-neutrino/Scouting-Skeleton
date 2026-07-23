@@ -21,17 +21,50 @@ var scoreList = {
   "Example": 1
 };
 
+const SCORE_LIST_TEMPLATE = structuredClone(scoreList);
+
+const ACTION_FORMATTING = {
+  "Example": {
+    "+": "Added {0} Example",
+    "-": "Subtracted {0} Example",
+  }
+}
+
+const TERMINAL_ELEMENT_NAME = "teamLog1"
+
+// support for stacking actions together like in 2026 can be added at some point I'm like really lazy
+// and I'm writing this after a really short LC meeting too and I have like 30 minutes before graphics
+// give me a break
+
 var actionList = [];
+
+// javascript doesn't have a string.format and I realized that a little too late
+if (!String.prototype.format) {
+  String.prototype.format = function () {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function (match, number) {
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+        ;
+    });
+  };
+}
 
 function numericAction(scoreListID, operation, value) {
   let actionData = [scoreListID, operation, value];
 
   actionList.push(actionData);
   processAction(actionData);
+  addActionToTerminal(actionData);
 }
 
-function reprocessActionList() {
-  console.log("OH YEAAAÀ")
+function recalculateScoreList() {
+  scoreList = structuredClone(SCORE_LIST_TEMPLATE);
+
+  for (let i = 0; i++; i < actionList.length) {
+    processAction(actionList[i]);
+  }
 }
 
 function processAction(actionData) {
@@ -79,7 +112,59 @@ function undoAction(position) {
 
       scoreList[scoreListID] = oldData;
     } else {
-      reprocessActionList();
+      recalculateScoreList();
     }
   }
+
+  reprocessTerminal();
+}
+
+function updateTerminalWithDefaultLine(action, terminalText) {
+  if (action[1] == "+") {
+    terminalText = terminalText + "Added " + action[2] + " to " + action[0] + "\n"
+  } else {
+    terminalText = terminalText + "Subtracted " + action[2] + " from " + action[0] + "\n"
+  }
+
+  return terminalText
+}
+
+function addActionToTerminal(action, doNotUpdateUIElement) {
+  let terminalText = document.getElementById(TERMINAL_ELEMENT_NAME).value;
+  let modifiedEntry = action[0];
+  let operation = action[1];
+  let newValue = action[2];
+
+  if (operation != "Set") {
+    if (modifiedEntry in ACTION_FORMATTING) {
+      if (operation in ACTION_FORMATTING[modifiedEntry]) {
+        let text = ACTION_FORMATTING[modifiedEntry][operation]
+
+        text.format(newValue)
+        terminalText = terminalText + text + "\n"
+      } else {
+        updateTerminalWithDefaultLine();
+      }
+    } else {
+      updateTerminalWithDefaultLine();
+    }
+  } else {
+    terminalText = terminalText + "Set " + modifiedEntry + " to " + newValue + "\n"
+  }
+  
+  if (doNotUpdateUIElement) {
+    return terminalText;
+  }
+
+  document.getElementById(TERMINAL_ELEMENT_NAME).value = terminalText
+  }
+
+function reprocessTerminal() {
+  document.getElementById(TERMINAL_ELEMENT_NAME).value = ""
+
+  for (let i = actionList.length - 1; i--; i >= 0) {
+    terminalText = addActionToTerminal(actionList[i], true);
+  }
+
+  document.getElementById(TERMINAL_ELEMENT_NAME).value = terminalText;
 }
