@@ -51,6 +51,7 @@ if (!String.prototype.format) {
   };
 }
 
+// Completes a numeric action (add or subtract from an entry in the score list)
 function numericAction(scoreListID, operation, value) {
   let actionData = [scoreListID, operation, value];
 
@@ -59,6 +60,7 @@ function numericAction(scoreListID, operation, value) {
   addActionToTerminal(actionData);
 }
 
+// Recalculates the entire score list in case something went wrong or we undoed an action from a long time ago.
 function recalculateScoreList() {
   scoreList = structuredClone(SCORE_LIST_TEMPLATE);
 
@@ -85,6 +87,7 @@ function processAction(actionData) {
   }
 }
 
+// Undo the last action. Also allows you to undo actions from a long time ago and recalculate score list with that in mind
 function undoAction(position) {
   let actionData;
 
@@ -119,18 +122,26 @@ function undoAction(position) {
   reprocessTerminal();
 }
 
-function updateTerminalWithDefaultLine(action, terminalText) {
+// If an action has no formatting, just give it a default line
+function concatenateActionDefaultLine(action, terminalText) {
   if (action[1] == "+") {
-    terminalText = terminalText + "Added " + action[2] + " to " + action[0] + "\n"
+    terminalText = "Added " + action[2] + " to " + action[0] + "\n" + terminalText
   } else {
-    terminalText = terminalText + "Subtracted " + action[2] + " from " + action[0] + "\n"
+    terminalText = "Subtracted " + action[2] + " from " + action[0] + "\n" + terminalText
   }
 
   return terminalText
 }
 
-function addActionToTerminal(action, doNotUpdateUIElement) {
-  let terminalText = document.getElementById(TERMINAL_ELEMENT_NAME).value;
+/* 
+Take an action and add it to the terminal, assuming the rest of the terminal is still good.
+The latter two parameters are mainly for reprocessTerminal() below.
+*/
+function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
+  if (!terminalText) {
+    terminalText = document.getElementById(TERMINAL_ELEMENT_NAME).value;
+  }
+
   let modifiedEntry = action[0];
   let operation = action[1];
   let newValue = action[2];
@@ -143,13 +154,13 @@ function addActionToTerminal(action, doNotUpdateUIElement) {
         text.format(newValue)
         terminalText = terminalText + text + "\n"
       } else {
-        updateTerminalWithDefaultLine();
+        terminalText = concatenateActionDefaultLine(action, terminalText);
       }
     } else {
-      updateTerminalWithDefaultLine();
+      terminalText = concatenateActionDefaultLine(action, terminalText);
     }
   } else {
-    terminalText = terminalText + "Set " + modifiedEntry + " to " + newValue + "\n"
+    terminalText = "Set " + modifiedEntry + " to " + newValue + "\n" + terminalText
   }
   
   if (doNotUpdateUIElement) {
@@ -159,12 +170,15 @@ function addActionToTerminal(action, doNotUpdateUIElement) {
   document.getElementById(TERMINAL_ELEMENT_NAME).value = terminalText
   }
 
+// Erase the terminal and reconstruct the terminal from the whole action list in case something went wrong.
 function reprocessTerminal() {
-  document.getElementById(TERMINAL_ELEMENT_NAME).value = ""
+  let terminalText = ""
 
   for (let i = actionList.length - 1; i--; i >= 0) {
-    terminalText = addActionToTerminal(actionList[i], true);
+    terminalText = addActionToTerminal(actionList[i], true, terminalText);
   }
 
   document.getElementById(TERMINAL_ELEMENT_NAME).value = terminalText;
 }
+
+// Todo : Make the website work :D this will Surely be Fun and Epic
