@@ -340,6 +340,8 @@ function load(windowLocation) {
   window.location.href = `./${windowLocation}.html`;
 }
 
+var zoom = false;
+
 function qrZoom() {
   let qr = document.getElementById('qrArea');
   if (zoom) {
@@ -387,4 +389,45 @@ function toQuotes() {
     localStorage.setItem("oldCompList" + extraData[1], compressedList);
     localStorage.setItem("oldExtraData" + extraData[1], extraData);
   }, 20 * repeat);
+}
+
+var regenOpen = false;
+
+function reset(action) {
+  let resetQr = document.getElementById('resetQr');
+  let qrHtml = '<div class="qr-holder" id="qrArea"  onclick="qrZoom()" style="opacity:0;transform:scale(1.1, 1.1) rotate(3deg)"> \n </div>';
+  let resetHTML = '<div class="reset-pop-up" id="resetPopUp" style="opacity:0;transform:scale(0.9, 0.9) rotate(-3deg)"> \n <div class="reset-pop-up-top"> \n <h2>Do You Really Want To Reset?</h2> \n </div> \n <div class="reset-pop-up-bottom"> \n <button class="reset-pop-up-button color1" onclick="toQuotes()" id="yesButton">Yes</button> \n<button class="reset-pop-up-button color2" onclick="reset(\'no\')" id="noButton">No</button> \n </div> \n </div>';
+  if (regenOpen) {
+    regenQR();
+  }
+  if (action == 'reset') {
+    resetMenuVisible = true;
+    let qrArea = document.getElementById('qrArea');
+    qrArea.style.transition = 'transform 0.4s ease-out, opacity 0.25s ease-out';
+    qrArea.style.opacity = 0;
+    qrArea.style.transform = 'scale(1.1, 1.1) rotate(3deg)';
+    setTimeout(() => {
+      resetQr.innerHTML = "";
+      resetQr.innerHTML = resetHTML;
+    }, 260);
+    setTimeout(() => {
+      document.getElementById("resetPopUp").style.removeProperty("opacity");
+      document.getElementById("resetPopUp").style.removeProperty("transform");
+    }, 300);
+  }
+  if (action == 'no') {
+    resetMenuVisible = false;
+    let resetPopUp = document.getElementById("resetPopUp");
+    resetPopUp.style.opacity = 0;
+    resetPopUp.style.transform = 'scale(0.9, 0.9) rotate(-3deg)';
+    setTimeout(() => {
+      resetQr.innerHTML = "";
+      resetQr.innerHTML = qrHtml;
+      initQRCode();
+    }, 260);
+    setTimeout(() => {
+      document.getElementById("qrArea").style.removeProperty("opacity");
+      document.getElementById("qrArea").style.removeProperty("transform");
+    }, 300);
+  }
 }
