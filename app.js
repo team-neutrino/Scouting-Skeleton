@@ -18,7 +18,7 @@
 */
 
 var scoreList = {
-  "Example": 1
+  "Example": 0
 };
 const SCORE_LIST_TEMPLATE = structuredClone(scoreList);
 
@@ -29,23 +29,23 @@ const ACTION_FORMATTING = {
   }
 }
 
+const SCORE_WEIGHT = { // how much score is assigned to each entry in scoreList
+  "Example": 1,
+}
+
 const TERMINAL_ELEMENT_NAME = "teamLog1"
+const SCORE_ELEMENT_NAME = "teamLog2"
 
 var actionList = [];
 
 var extraData = []; //['teamNum', 'matchNum', 'scout', 'comment', 'alliance pick']
 
 // javascript doesn't have a string.format and I realized that a little too late
-if (!String.prototype.format) {
-  String.prototype.format = function () {
-    var args = arguments;
-    return this.replace(/{(\d+)}/g, function (match, number) {
-      return typeof args[number] != 'undefined'
-        ? args[number]
-        : match
-        ;
-    });
-  };
+
+function formatString(template, ...args) {
+  return template.replace(/{(\d+)}/g, (match, number) => {
+    return typeof args[number] !== 'undefined' ? args[number] : match;
+  });
 }
 
 // Completes a numeric action (add or subtract from an entry in the score list)
@@ -73,6 +73,24 @@ function recalculateScoreList() {
   for (let i = 0; i++; i < actionList.length) {
     processAction(actionList[i]);
   }
+
+  updateScoreElement();
+}
+
+function calculateScore() {
+  let localScore = 0;
+
+  for (const [key, value] of Object.entries(scoreList)) {
+    if (key in SCORE_WEIGHT) {
+      localScore += value * SCORE_WEIGHT[key];
+    }
+  }
+
+  return localScore;
+}
+
+function updateScoreElement() {
+  document.getElementById("teamLog2").value = calculateScore();
 }
 
 function processAction(actionData) {
@@ -91,6 +109,8 @@ function processAction(actionData) {
   } else {
     scoreList[scoreListID] = newVal;
   }
+
+  updateScoreElement();
 }
 
 // Undo the last action. Also allows you to undo actions from a long time ago and recalculate score list with that in mind
@@ -159,7 +179,7 @@ function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
       if (operation in ACTION_FORMATTING[modifiedEntry]) {
         let text = ACTION_FORMATTING[modifiedEntry][operation]
 
-        text.format(newValue)
+        text = formatString(text, newValue)
         terminalText = terminalText + text + "\n"
       } else {
         terminalText = concatenateActionDefaultLine(action, terminalText);
@@ -180,9 +200,14 @@ function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
 
 // Erase the terminal and reconstruct the terminal from the whole action list in case something went wrong.
 function reprocessTerminal() {
-  let terminalText = ""
+  let terminalText = "";
+
+  if (actionList.length === 0) {
+    return terminalText;
+  }
 
   for (let i = actionList.length - 1; i--; i >= 0) {
+    console.log(actionList[i], i);
     terminalText = addActionToTerminal(actionList[i], true, terminalText);
   }
 
@@ -216,7 +241,7 @@ function GO(iPadID, matchsaver, scoutsaver) {
   sessionStorage.setItem("scoutInitials", scoutsaver);
   sessionStorage.setItem("matchNum", matchsaver);
 
-  actionList[0] = extraData[4];
+  // actionList[0] = extraData[4];
   saveData();
   if (allClear) {
     window.location.href = "./" + "auton" + ".html";
@@ -241,6 +266,8 @@ function getData() {
   extraData = JSON.parse(sessionStorage.getItem("extraData"));
   scoreList = JSON.parse(sessionStorage.getItem("scoreList"));
 
+  console.log(actionList, extraData, scoreList)
+
   reprocessTerminal();
 }
 
@@ -251,6 +278,8 @@ function loadPage() {
 }
 
 function displayBoxData() {
+  console.log("EXTRA DATA IS   ", extraData, "!!!!!!!!")
+
   if (extraData[0] !== undefined) {
     document.getElementById('teamNumberBox').value = extraData[0];
   }
@@ -260,6 +289,8 @@ function displayBoxData() {
   if (extraData[3] !== undefined) {
     document.getElementById('coment').value = extraData[3];
   }
+
+  updateScoreElement();
 }
 
 function commentEdit(comment) {
@@ -281,7 +312,9 @@ function setTeam(matchnumb, ipadID) {
   if (sessionStorage.getItem('matchNumber') !== null) {
     matchnum = sessionStorage.getItem('matchNumber');
   }
+
   matchnum = parseInt(matchnumb);
+
   if (ipadID == 1) {
     document.getElementById("teamNum").value = blue1[matchnum - 1];
   }
@@ -345,11 +378,13 @@ function toQuotes() {
   setTimeout(() => {
     insertQuote.innerHTML += "<br><br><strong>" + author + "</strong>";
     insertQuote.innerHTML += "<button onclick='window.location.href = `./index.html`' class='continuieButton' id='contineButton'>Continue</button>";
-    var sums = Array(27).fill(0); //Compress List
-    for (const item of compressedList) {
-      sums[item]++;
+    var compressedList = Array()
+
+    for (const [key, value] of Object.entries(scoreList)) {
+      compressedList.push(value)
     }
-    localStorage.setItem("oldCompList" + extraData[1], sums);
+
+    localStorage.setItem("oldCompList" + extraData[1], compressedList);
     localStorage.setItem("oldExtraData" + extraData[1], extraData);
   }, 20 * repeat);
 }
