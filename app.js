@@ -18,7 +18,8 @@
 */
 
 var scoreList = {
-  "Example": 0
+  "Example": 0,
+  "Example_Auto": 0
 };
 const SCORE_LIST_TEMPLATE = structuredClone(scoreList);
 
@@ -26,11 +27,16 @@ const ACTION_FORMATTING = {
   "Example": {
     "+": "Added {0} Example",
     "-": "Subtracted {0} Example",
-  }
+  },
+  "Example_Auto": {
+    "+": "Added {0} Example (A)",
+    "-": "Subtracted {0} Example (A)",
+  },
 }
 
 const SCORE_WEIGHT = { // how much score is assigned to each entry in scoreList
   "Example": 1,
+  "Example_Auto": 1,
 }
 
 const TERMINAL_ELEMENT_NAME = "teamLog1"
@@ -117,18 +123,20 @@ function processAction(actionData) {
 // todo make this smarter (make everything not just Set actions use oldValue (actiondata[3]) or just get rid of it)
 
 function undoAction(position) {
+  if (actionList.length === 0) {
+    return false
+  }
+
+
   let actionData;
 
   if (position) {
     actionData = actionList[position]
-  } else {
-    actionData = actionList[actionList.length - 1]
-  }
+    actionList = actionList.splice(position, 1);
 
-  if (position != null) {
-    actionList.splice(position, 1);
+    console.log(actionData, "TAKING FROM POSITION !!! " + position)
   } else {
-    actionList.pop()
+    actionData = actionList.pop();
   }
 
   let operation = actionData[1];
@@ -166,7 +174,7 @@ Take an action and add it to the terminal, assuming the rest of the terminal is 
 The latter two parameters are mainly for reprocessTerminal() below.
 */
 function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
-  if (!terminalText) {
+  if (!terminalText && terminalText != "") { // CURSE YOUUUUU
     terminalText = document.getElementById(TERMINAL_ELEMENT_NAME).value;
   }
 
@@ -180,7 +188,7 @@ function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
         let text = ACTION_FORMATTING[modifiedEntry][operation]
 
         text = formatString(text, newValue)
-        terminalText = terminalText + text + "\n"
+        terminalText = text + "\n" + terminalText
       } else {
         terminalText = concatenateActionDefaultLine(action, terminalText);
       }
@@ -203,11 +211,12 @@ function reprocessTerminal() {
   let terminalText = "";
 
   if (actionList.length === 0) {
+    document.getElementById(TERMINAL_ELEMENT_NAME).value = terminalText;
     return terminalText;
   }
 
-  for (let i = actionList.length - 1; i--; i >= 0) {
-    console.log(actionList[i], i);
+  for (let i = 0; i < actionList.length; i++) {
+    console.log(actionList[i], i, terminalText);
     terminalText = addActionToTerminal(actionList[i], true, terminalText);
   }
 
@@ -215,6 +224,7 @@ function reprocessTerminal() {
 }
 
 // Todo : Make the website work :D this will Surely be Fun and Epic
+// most code after this point has not been significantly changed from the original app
 
 function GO(iPadID, matchsaver, scoutsaver) {
   getBoxData();
