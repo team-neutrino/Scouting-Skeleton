@@ -42,7 +42,7 @@
             actionList = JSON.parse(unparsedActionList);
             scoreList = JSON.parse(unparsedScoreList);
             extraData = JSON.parse(unparsedExtradata);
-            var compressedList = Array()
+            var compressedList = []
 
             for (const [key, value] of Object.entries(scoreList)) {
                 compressedList.push(value)
@@ -53,26 +53,14 @@
 
             qrcode.clear();
             qrcode.makeCode(
-                extraData[0] +
-                "\t" +
-                extraData[1] +
-                "\t" +
-                extraData[2] +
-                "\t" +
-                extraData[3] +
-                "\t" +
-                extraData[4] +
-                "\t" +
-                extraData[5] +
-                "\t" +
-                extraData[6] +
-                "\t" +
-                extraData[7] +
-                "\t" +
-                extraData[8] +
-                "\t" +
+                extraData.join("\t") + "\t" +
                 compressedList.join(",")
             );
+
+            let matchNumber = extraData[1];
+
+            localStorage.setItem("oldCompList" + matchNumber, compressedList)
+            localStorage.setItem("oldExtraData" + matchNumber, extraData)
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -86,7 +74,7 @@
             if (oldCompList === null) {
                 return;
             }
-            let oldExtraData = localStorage.getItem("oldExtraData" + oldMatch).split(",");
+            let oldExtraData = localStorage.getItem("oldExtraData" + oldMatch);
             qrcode.clear();
             qrcode.makeCode(
                 oldExtraData[0] +
