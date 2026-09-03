@@ -21,12 +21,15 @@
             let height = document.body.clientHeight;
             let width = document.body.clientWidth;
             let qrSize = 200;
+
             if (height <= width) {
                 qrSize = height / 2;
             }
+
             if (width < height) {
                 qrSize = width / 2;
             }
+
             qrcode = new QRCode(document.getElementById("qrArea"), {
                 text: "",
                 width: qrSize,
@@ -35,13 +38,17 @@
                 colorLight: "white",
                 correctLevel: QRCode.CorrectLevel.M,
             });
+
             document.getElementById('qrArea').style.width = qrSize + "px";
+
             let unparsedActionList = sessionStorage.getItem("actionList");
             let unparsedExtradata = sessionStorage.getItem("extraData");
             let unparsedScoreList = sessionStorage.getItem("scoreList");
+
             actionList = JSON.parse(unparsedActionList);
             scoreList = JSON.parse(unparsedScoreList);
             extraData = JSON.parse(unparsedExtradata);
+
             var compressedList = []
 
             for (const [key, value] of Object.entries(scoreList)) {
@@ -59,8 +66,8 @@
 
             let matchNumber = extraData[1];
 
-            localStorage.setItem("oldCompList" + matchNumber, compressedList)
-            localStorage.setItem("oldExtraData" + matchNumber, extraData)
+            localStorage.setItem("oldCompList" + matchNumber, JSON.stringify(compressedList));
+            localStorage.setItem("oldExtraData" + matchNumber, JSON.stringify(extraData));
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -69,33 +76,23 @@
         });
 
         function regenOldQR() {
-            const oldMatch = prompt("What Match?");
-            const oldCompList = localStorage.getItem("oldCompList" + oldMatch)
+            let oldMatch = prompt("What Match?");
+            let oldCompList = localStorage.getItem("oldCompList" + oldMatch)
+
             if (oldCompList === null) {
                 return;
             }
+
             let oldExtraData = localStorage.getItem("oldExtraData" + oldMatch);
+
+            if (oldExtraData === null) {
+                return
+            }
+
             qrcode.clear();
             qrcode.makeCode(
-                oldExtraData[0] +
-                "\t" +
-                oldExtraData[1] +
-                "\t" +
-                oldExtraData[2] +
-                "\t" +
-                oldExtraData[3] +
-                "\t" +
-                oldExtraData[4] +
-                "\t" +
-                oldExtraData[5] +
-                "\t" +
-                oldExtraData[6] +
-                "\t" +
-                oldExtraData[7] +
-                "\t" +
-                oldExtraData[8] +
-                "\t" +
-                oldCompList
+                JSON.parse(oldExtraData).join("\t") + "\t" +
+                JSON.parse(oldCompList).join(",")
             );
         }
     </script>

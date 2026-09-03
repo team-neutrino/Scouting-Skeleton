@@ -395,9 +395,6 @@ function toQuotes() {
     for (const [key, value] of Object.entries(scoreList)) {
       compressedList.push(value)
     }
-
-    localStorage.setItem("oldCompList" + extraData[1], compressedList);
-    localStorage.setItem("oldExtraData" + extraData[1], extraData);
   }, 20 * repeat);
 }
 
