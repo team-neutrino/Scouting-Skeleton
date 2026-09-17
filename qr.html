@@ -109,6 +109,8 @@
                 JSON.parse(oldCompList).join(",")
             );
 
+            document.getElementById("saveMatch").innerHTML = "Unsave Regened Match";
+
             sessionStorage.setItem("overrideMatchNumber", oldMatch)
         }
         function saveMatchNumber() {
@@ -126,9 +128,10 @@
 
             console.log(alreadySavedMatches);
             console.log(matchNumber);
+            console.log(matchNumber in alreadySavedMatches)
 
-            if (matchNumber in alreadySavedMatches) {
-                alreadySavedMatches.splice(alreadySavedMatches.indexOf(matchNumber), 1);
+            if (alreadySavedMatches.includes(matchNumber.toString())) {
+                alreadySavedMatches.splice(alreadySavedMatches.indexOf(matchNumber.toString()) - 1, 1);
                 document.getElementById("saveMatch").innerHTML = "Save Match #";
                 console.log("ya");
             } else {
@@ -138,6 +141,16 @@
             }
 
             localStorage.setItem("savedMatchNumbers", JSON.stringify(alreadySavedMatches));
+        }
+        function clearSavedMatches() {
+            var answer = prompt("Are you sure? Y/N");
+
+            if (answer) {
+                if (answer.toLowerCase() === "y") {
+                    localStorage.setItem("savedMatchNumbers", JSON.stringify([]))
+                    document.getElementById("saveMatch").innerHTML = "Save Match #";
+                }
+            }
         }
     </script>
     <style id="changeStyle"></style>
@@ -168,6 +181,7 @@
             <td>
                 <button onclick="regenOldQR()">Regen</button>
                 <button id="saveMatch" onclick="saveMatchNumber()">Save Match #</button>
+                <button id="saveMatch" onclick="clearSavedMatches()">Clear Saved Matches</button>
             </td>
             <td>
                 <button onclick="reset('reset')">Reset</button>
