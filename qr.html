@@ -68,6 +68,8 @@
 
             localStorage.setItem("oldCompList" + matchNumber, JSON.stringify(compressedList));
             localStorage.setItem("oldExtraData" + matchNumber, JSON.stringify(extraData));
+
+            sessionStorage.removeItem("overrideMatchNumber")
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -76,7 +78,19 @@
         });
 
         function regenOldQR() {
-            let oldMatch = prompt("What Match?");
+            let savedMatchNumbers = localStorage.getItem("savedMatchNumbers");
+            let oldMatch;
+            if (!savedMatchNumbers) {
+                oldMatch = prompt("What Match?")
+            } else {
+                savedMatchNumbers = JSON.parse(savedMatchNumbers);
+
+                if (savedMatchNumbers.length > 0) {
+                    oldMatch = prompt("What Match? (Saved matches: " + savedMatchNumbers.join(", ") + ")");
+                } else {
+                    oldMatch = prompt("What Match?")
+                }
+            }
             let oldCompList = localStorage.getItem("oldCompList" + oldMatch)
 
             if (oldCompList === null) {
@@ -94,6 +108,36 @@
                 JSON.parse(oldExtraData).join("\t") + "\t" +
                 JSON.parse(oldCompList).join(",")
             );
+
+            sessionStorage.setItem("overrideMatchNumber", oldMatch)
+        }
+        function saveMatchNumber() {
+            let matchNumber = JSON.parse(sessionStorage.getItem("extraData"))[1];
+
+            if (sessionStorage.getItem("overrideMatchNumber")) {
+                matchNumber = sessionStorage.getItem("overrideMatchNumber")
+            }
+
+            let alreadySavedMatches = JSON.parse(localStorage.getItem("savedMatchNumbers"))
+
+            if (!alreadySavedMatches) {
+                alreadySavedMatches = []
+            }
+
+            console.log(alreadySavedMatches);
+            console.log(matchNumber);
+
+            if (matchNumber in alreadySavedMatches) {
+                alreadySavedMatches.splice(alreadySavedMatches.indexOf(matchNumber), 1);
+                document.getElementById("saveMatch").innerHTML = "Save Match #";
+                console.log("ya");
+            } else {
+                alreadySavedMatches.push(matchNumber);
+                document.getElementById("saveMatch").innerHTML = "Unsave Match #";
+                console.log("a");
+            }
+
+            localStorage.setItem("savedMatchNumbers", JSON.stringify(alreadySavedMatches));
         }
     </script>
     <style id="changeStyle"></style>
@@ -123,6 +167,7 @@
             </td>
             <td>
                 <button onclick="regenOldQR()">Regen</button>
+                <button id="saveMatch" onclick="saveMatchNumber()">Save Match #</button>
             </td>
             <td>
                 <button onclick="reset('reset')">Reset</button>
