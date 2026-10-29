@@ -12,11 +12,10 @@
   -- or for *any* entry, but most likely things like an endgame climb, there is also the "Set" operation,
   which 'sets' the new value of the entry to a certain value (doesn't have to be a number), in which case the
   data should look like:
-  [scoreListID, "Set", newValue, oldValue]
+  [scoreListID, "Set", newValue, oldValue, timestamp]
 
-  [scoreListID, "+", newValue]
+  [scoreListID, "+", newValue, timestamp]
 */
-
 var scoreList = {
   "Example": 0,
   "Example_Auto": 0
@@ -54,9 +53,27 @@ function formatString(template, ...args) {
   });
 }
 
+function timePrettify(timeStr) {
+  if (timeStr.length < 2) {
+    timeStr = "0" + timeStr
+  }
+
+  return timeStr
+}
+
+function formatDate(date) {
+  let hours = timePrettify((date.getHours() % 12).toString());
+  let minutes = timePrettify(date.getMinutes().toString());
+  let seconds = timePrettify(date.getSeconds().toString());
+
+
+
+  return "" + hours + ":" + minutes + ":" + seconds + " ~";
+}
+
 // Completes a numeric action (add or subtract from an entry in the score list)
 function numericAction(scoreListID, operation, value) {
-  let actionData = [scoreListID, operation, value];
+  let actionData = [scoreListID, operation, value, new Date()];
 
   actionList.push(actionData);
   processAction(actionData);
@@ -65,7 +82,7 @@ function numericAction(scoreListID, operation, value) {
 
 // Completes a numeric action (add or subtract from an entry in the score list)
 function set(scoreListID, value) {
-  let actionData = [scoreListID, "Set", value, scoreList[scoreListID]];
+  let actionData = [scoreListID, "Set", value, scoreList[scoreListID], new Date()];
 
   actionList.push(actionData);
   processAction(actionData);
@@ -161,9 +178,9 @@ function undoAction(position) {
 // If an action has no formatting, just give it a default line
 function concatenateActionDefaultLine(action, terminalText) {
   if (action[1] == "+") {
-    terminalText = "Added " + action[2] + " to " + action[0] + "\n" + terminalText
+    terminalText = formatDate(action[3]) + " Added " + action[2] + " to " + action[0] + "\n" + terminalText
   } else {
-    terminalText = "Subtracted " + action[2] + " from " + action[0] + "\n" + terminalText
+    terminalText = formatDate(action[3]) + " Subtracted " + action[2] + " from " + action[0] + "\n" + terminalText
   }
 
   return terminalText
@@ -183,12 +200,14 @@ function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
   let newValue = action[2];
 
   if (operation != "Set") {
+    let timestamp = action[3];
+
     if (modifiedEntry in ACTION_FORMATTING) {
       if (operation in ACTION_FORMATTING[modifiedEntry]) {
         let text = ACTION_FORMATTING[modifiedEntry][operation]
 
         text = formatString(text, newValue)
-        terminalText = text + "\n" + terminalText
+        terminalText = formatDate(timestamp) + " " + text + "\n" + terminalText
       } else {
         terminalText = concatenateActionDefaultLine(action, terminalText);
       }
@@ -196,7 +215,8 @@ function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
       terminalText = concatenateActionDefaultLine(action, terminalText);
     }
   } else {
-    terminalText = "Set " + modifiedEntry + " to " + newValue + "\n" + terminalText
+    let timestamp = action[4]
+    terminalText = formatDate(timestamp) + " Set " + modifiedEntry + " to " + newValue + "\n" + terminalText
   }
 
   if (doNotUpdateUIElement) {
