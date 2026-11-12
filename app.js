@@ -25,12 +25,12 @@ const SCORE_LIST_TEMPLATE = structuredClone(scoreList);
 
 const ACTION_FORMATTING = {
   "Example": {
-    "+": "Added {0} Example",
-    "-": "Subtracted {0} Example",
+    "+": [["Added {0} Example"]],
+    "-": [["Subtracted {0} Example"]],
   },
   "Example_Auto": {
-    "+": "Added {0} Example (A)",
-    "-": "Subtracted {0} Example (A)",
+    "+": [['Added {0} Example'], [' (A)', 'color: orange; font-weight: bold']],
+    "-": [['Subtracted {0} Example'], [' (A)', 'color: orange; font-weight: bold']],
   },
 }
 
@@ -159,25 +159,19 @@ function undoAction(position) {
 }
 
 // If an action has no formatting, just give it a default line
-function concatenateActionDefaultLine(action, terminalText) {
+function concatenateActionDefaultLine(action) {
   if (action[1] == "+") {
-    terminalText = "Added " + action[2] + " to " + action[0] + "\n" + terminalText
+    return [["Added " + action[2] + " to " + action[0]]]
   } else {
-    terminalText = "Subtracted " + action[2] + " from " + action[0] + "\n" + terminalText
+    return [["Subtracted " + action[2] + " from " + action[0]]]
   }
-
-  return terminalText
 }
 
 /* 
 Take an action and add it to the terminal, assuming the rest of the terminal is still good.
 The latter two parameters are mainly for reprocessTerminal() below.
 */
-function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
-  if (!terminalText && terminalText != "") { // CURSE YOUUUUU
-    terminalText = document.getElementById(TERMINAL_ELEMENT_NAME).value;
-  }
-
+function addActionToTerminal(action) {
   let modifiedEntry = action[0];
   let operation = action[1];
   let newValue = action[2];
@@ -185,43 +179,60 @@ function addActionToTerminal(action, doNotUpdateUIElement, terminalText) {
   if (operation != "Set") {
     if (modifiedEntry in ACTION_FORMATTING) {
       if (operation in ACTION_FORMATTING[modifiedEntry]) {
-        let text = ACTION_FORMATTING[modifiedEntry][operation]
+        let text = ACTION_FORMATTING[modifiedEntry][operation].slice();
 
-        text = formatString(text, newValue)
-        terminalText = text + "\n" + terminalText
+        for (let segment of text) {
+          let formattedString = formatString(segment[0], newValue);
+          segment[0] = formattedString;
+        }
+
+        createTerminalLine(text);
       } else {
-        terminalText = concatenateActionDefaultLine(action, terminalText);
+        createTerminalLine(concatenateActionDefaultLine(action, terminalText));
       }
     } else {
-      terminalText = concatenateActionDefaultLine(action, terminalText);
+      createTerminalLine(concatenateActionDefaultLine(action, terminalText));
     }
   } else {
-    terminalText = "Set " + modifiedEntry + " to " + newValue + "\n" + terminalText
+    createTerminalLine([["Set " + modifiedEntry + " to " + newValue + "\n" + terminalText]])
   }
-
-  if (doNotUpdateUIElement) {
-    return terminalText;
-  }
-
-  document.getElementById(TERMINAL_ELEMENT_NAME).value = terminalText
 }
 
 // Erase the terminal and reconstruct the terminal from the whole action list in case something went wrong.
 function reprocessTerminal() {
-  let terminalText = "";
-
-  if (actionList.length === 0) {
-    document.getElementById(TERMINAL_ELEMENT_NAME).value = terminalText;
-    return terminalText;
-  }
+  clearTerminal();
 
   for (let i = 0; i < actionList.length; i++) {
     console.log(actionList[i], i, terminalText);
-    terminalText = addActionToTerminal(actionList[i], true, terminalText);
+    addActionToTerminal(actionList[i]);
+  }
+}
+
+function createTerminalLine(text) {
+  let terminal = document.getElementById(TERMINAL_ELEMENT_NAME);
+  let newLine = document.createElement('div');
+
+  for (let segment of text) {
+    let newSegment = document.createElement('span');
+    newSegment.textContent = segment[0];
+
+    if (segment.length > 1) {
+      newSegment.style = segment[1];
+    }
+
+    newLine.appendChild(newSegment);
   }
 
-  document.getElementById(TERMINAL_ELEMENT_NAME).value = terminalText;
+  terminal.appendChild(newLine);
 }
+
+function clearTerminal() {
+  let terminal = document.getElementById(TERMINAL_ELEMENT_NAME);
+
+  terminal.replaceChildren();
+}
+
+
 
 // Todo : Make the website work :D this will Surely be Fun and Epic
 // most code after this point has not been significantly changed from the original app
